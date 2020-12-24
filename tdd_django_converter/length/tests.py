@@ -54,7 +54,7 @@ class TestLengthConversion(TestCase):
 
         self.assertContains(response, round(985802987.274, 3))
 
-    def test_unidade_nao_existente(self):
+    def test_unidade_nao_suportada(self):
         data = {
             "input_unit": "mil",
             "output_unit": "centimetree",
@@ -64,3 +64,15 @@ class TestLengthConversion(TestCase):
         response = self.client.get(self.url, data)
 
         self.assertContains(response, "Unidade de Medida Não Suportada!")
+    
+    def test_unidade_suportada(self):
+        data = {
+            "input_unit": "centimetre",
+            "output_unit": "metre",
+            "input_value": round(8096.894, 3),
+        }
+
+        response = self.client.get(self.url, data)
+
+        self.assertContains(response, 80.969)
+        self.assertNotContains(response, "Unidade de Medida Não Suportada!")
