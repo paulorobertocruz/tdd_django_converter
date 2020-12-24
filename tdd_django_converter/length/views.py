@@ -1,3 +1,33 @@
 from django.shortcuts import render
+from length.forms import LengthConverterForm
 
-# Create your views here.
+convert_to_metre = {
+    "centimetre": 0.01,
+    "metre": 1.0,
+}
+
+convert_to_centimetre = {
+    "centimetre": 100,
+    "metre": 1.0
+}
+
+
+def convert(request):
+    form = LengthConverterForm()
+    if request.GET:
+        input_unit = request.GET['input_unit']
+        input_value = request.GET['input_value']
+        output_unit = request.GET['output_unit']
+
+        metres = convert_to_metre[input_unit] * float(input_value)
+        output_value = metres * convert_to_centimetre[output_unit]
+        data = {
+            "input_unit": input_unit,
+            "input_value": input_value,
+            "output_unit": output_unit,
+            "output_value": round(output_value, 3)
+        }
+        form = LengthConverterForm(initial=data)
+        return render(request, "length/convert.html", context={"form": form})
+
+    return render(request, "length/convert.html", {"form": form})
