@@ -3,6 +3,9 @@
     <title>Length Conversion</title>
   </head>
   <body>
+    {% if key %}
+    Unidade de Medida Não Suportada! {{key}}
+    {% endif %}
     <form action={% url "length:convert" %} method="get">
       <div>
         {{ form.input_unit }}
